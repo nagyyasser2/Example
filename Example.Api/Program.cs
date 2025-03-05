@@ -1,15 +1,40 @@
 using Example.Core.Interfaces;
 using Example.EF;
 using Example.EF.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Example.Api.Services;
+using Example.Core.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>();
+
 builder.Services.AddControllers();
+builder.Services.AddScoped<UsersService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtOptions?.Issuer,
+            ValidAudience = jwtOptions?.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions!.SigningKey))
+        };
+    });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -34,6 +59,7 @@ if (builder.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
