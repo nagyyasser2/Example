@@ -7,7 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 
-namespace Example.Api.Services
+namespace Example.Core.Services
 {
     public class UsersService(IUnitOfWork unitOfWork, IOptions<JwtOptions> jwtOptions)
     {
@@ -23,7 +23,7 @@ namespace Example.Api.Services
         {
             var author = FindAuthorByName(username);
 
-            return author == null ? null : 
+            return author == null ? null :
                 GenerateToken(author);
         }
 

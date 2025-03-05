@@ -1,7 +1,7 @@
 ﻿using Example.Api.DTOs;
-using Example.Api.Services;
 using Example.Core.Configurations;
 using Example.Core.Interfaces;
+using Example.Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
