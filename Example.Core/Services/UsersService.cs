@@ -41,7 +41,7 @@ namespace Example.Core.Services
                 Subject = new ClaimsIdentity([
                     new Claim(ClaimTypes.NameIdentifier, author.Id.ToString()),
                     new Claim(ClaimTypes.Name, author.Name)
-                ])
+                ])      
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);

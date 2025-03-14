@@ -13,12 +13,15 @@ namespace Example.EF
     {
         private readonly ApplicationDbContext _context;
         public IBaseRepository<Author> Authors { get; private set; }
+        public IBaseRepository<UserPermission> UserPermissions { get; private set; }
         public IBooksRepository Books { get; private set; }
-
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
+
             Authors = new BaseRepository<Author>(_context);
+            UserPermissions = new BaseRepository<UserPermission>(_context);
+
             Books = new BooksRepository(_context);
         }
 

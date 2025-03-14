@@ -10,7 +10,7 @@ namespace Example.Core.Interfaces
     public interface IUnitOfWork: IDisposable
     {
         IBaseRepository<Author> Authors { get; }
-        // IBaseRepository<Book> Books { get; }
+        IBaseRepository<UserPermission> UserPermissions { get; }
         IBooksRepository Books { get; }
         int Complete();
     }

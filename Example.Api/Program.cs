@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Example.Api.Filters;
 using Example.Core.Services;
 using Example.Core.Configurations;
 
@@ -12,7 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<PermissionBasedAuthorizationFilter>();
+});
 builder.Services.AddScoped<UsersService>();
 
 builder.Services.AddEndpointsApiExplorer();
