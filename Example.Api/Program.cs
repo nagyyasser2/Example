@@ -1,13 +1,14 @@
+using Example.Api.Filters;
+using Example.Api.Middlewares;
+using Example.Core.Configurations;
 using Example.Core.Interfaces;
-using Example.EF;
+using Example.Core.Services;
 using Example.EF.Repositories;
+using Example.EF;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Example.Api.Filters;
-using Example.Core.Services;
-using Example.Core.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>();
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<PermissionBasedAuthorizationFilter>();
+    options.Filters.Add<LoggingActionFilter>();
 });
 builder.Services.AddScoped<UsersService>();
 
@@ -46,8 +48,20 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
+
 builder.Services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-builder.Services.AddTransient<IUnitOfWork,UnitOfWork>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
@@ -63,8 +77,13 @@ if (builder.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowAll");
+
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ProfilingMiddleware>();
+app.UseMiddleware<RateLimitingMiddleware>();
 
 app.MapControllers();
 

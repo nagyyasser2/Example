@@ -24,8 +24,4 @@
     <ProjectReference Include="..\Example.EF\Example.EF.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Middlewares\" />
-  </ItemGroup>
-
 </Project>
