@@ -17,5 +17,7 @@ namespace Example.Core.Interfaces
         IEnumerable<T>? FindAll(Expression<Func<T, bool>> match, string[]? includes = null);
         T Add(T entity);
         IEnumerable<T> AddRange(IEnumerable<T> entity);
+        bool Any(Expression<Func<T, bool>> match);
+        Task<bool> AnyAsync(Expression<Func<T, bool>> match);
     }
 }
