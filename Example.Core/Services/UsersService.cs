@@ -40,7 +40,8 @@ namespace Example.Core.Services
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256),
                 Subject = new ClaimsIdentity([
                     new Claim(ClaimTypes.NameIdentifier, author.Id.ToString()),
-                    new Claim(ClaimTypes.Name, author.Name)
+                    new Claim(ClaimTypes.Name, author.Name),
+                    new Claim(ClaimTypes.Role, "Admin"),
                 ])      
             };
 

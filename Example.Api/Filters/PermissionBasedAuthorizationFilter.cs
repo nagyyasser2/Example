@@ -14,7 +14,7 @@ namespace Example.Api.Filters
                 .OfType<CheckPermissionAttribute>()
                 .FirstOrDefault();
 
-            if (attribute == null)
+            if (attribute == null) 
             {
                 return;
             }
