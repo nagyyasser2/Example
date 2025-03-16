@@ -1,4 +1,6 @@
-﻿using Example.Api.Attributes;
+﻿using AutoMapper;
+using Example.Api.Attributes;
+using Example.Core.DTOs;
 using Example.Core.Enums;
 using Example.Core.Interfaces;
 using Example.Core.Models;
@@ -10,16 +12,20 @@ namespace Example.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
-    public class BooksController(IUnitOfWork unitOfWork): ControllerBase
+    //[Authorize]
+    public class BooksController(IUnitOfWork unitOfWork, IMapper mapper): ControllerBase
     {
+        public IMapper Mapper { get; } = mapper;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         [HttpGet]
-        [Authorize(Roles = "Admin,SuperUser")]
+       // [Authorize(Roles = "Admin,SuperUser")]
         public IActionResult GetAll()
         {
-            return Ok(_unitOfWork.Books.GetAll());
+            var books = _unitOfWork.Books.GetAll();
+            var data = Mapper.Map<IEnumerable<BookDto>>(books);
+
+            return Ok(data);
         }
 
         [HttpGet("allAsync")]

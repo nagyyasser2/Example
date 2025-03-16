@@ -1,4 +1,4 @@
-﻿using Example.Api.DTOs;
+﻿using Example.Core.DTOs;
 using Example.Core.Configurations;
 using Example.Core.Interfaces;
 using Example.Core.Services;
@@ -11,8 +11,6 @@ namespace Example.Api.Controllers
     [ApiController]
     public class UsersController(UsersService usersService) : ControllerBase
     {
-       
-
         [HttpPost]
         [Route("auth")]
         public ActionResult<string> AuthenticateUser(AuthenticationRequest request)
